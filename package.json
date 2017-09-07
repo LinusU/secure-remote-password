@@ -1,0 +1,17 @@
+{
+  "name": "secure-remote-password",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": "LinusU/secure-remote-password",
+  "scripts": {
+    "test": "standard && mocha"
+  },
+  "dependencies": {
+    "jsbn": "^1.1.0",
+    "pad-start": "^1.0.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.5.0",
+    "standard": "^10.0.3"
+  }
+}
