@@ -16,7 +16,7 @@ exports.generateEphemeral = function (verifier) {
 
   // B = kv + g^b             (b = random number)
   const b = randomInteger()
-  const B = k.multiply(v).add(g.modPow(b, N))
+  const B = k.multiply(v).add(g.modPow(b, N)).mod(N)
 
   return {
     secret: padStart(b.toString(16), params.H_length_bits / 4, '0'),
