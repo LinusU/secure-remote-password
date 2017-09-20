@@ -1,9 +1,7 @@
 'use strict'
 
-const padStart = require('pad-start')
-const { BigInteger } = require('jsbn')
-
-const { params, H, randomInteger } = require('./common')
+const params = require('./lib/params')
+const SRPInteger = require('./lib/srp-integer')
 
 exports.generateEphemeral = function (verifier) {
   // N    A large safe prime (N = 2q+1, where q is prime)
@@ -12,22 +10,23 @@ exports.generateEphemeral = function (verifier) {
   const { N, g, k } = params
 
   // v    Password verifier
-  const v = new BigInteger(verifier, 16)
+  const v = SRPInteger.fromHex(verifier)
 
   // B = kv + g^b             (b = random number)
-  const b = randomInteger()
+  const b = SRPInteger.randomInteger()
   const B = k.multiply(v).add(g.modPow(b, N)).mod(N)
 
   return {
-    secret: padStart(b.toString(16), params.H_length_bits / 4, '0'),
-    public: padStart(B.toString(16), params.N_length_bits / 4, '0')
+    secret: b.toHex(),
+    public: B.toHex()
   }
 }
 
 exports.computeSession = function (serverEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof) {
   // N    A large safe prime (N = 2q+1, where q is prime)
   // g    A generator modulo N
-  const { N, g } = params
+  // H()  One-way hash function
+  const { N, g, H } = params
 
   // b    Secret ephemeral values
   // A,B  Public ephemeral values
@@ -35,15 +34,15 @@ exports.computeSession = function (serverEphemeral, clientPublicEphemeral, salt,
   // p    Cleartext Password
   // I    Username
   // v    Password verifier
-  const b = new BigInteger(serverEphemeral.secret, 16)
-  const A = new BigInteger(clientPublicEphemeral, 16)
-  const B = new BigInteger(serverEphemeral.public, 16)
-  const s = new BigInteger(salt, 16)
+  const b = SRPInteger.fromHex(serverEphemeral.secret)
+  const A = SRPInteger.fromHex(clientPublicEphemeral)
+  const B = SRPInteger.fromHex(serverEphemeral.public)
+  const s = SRPInteger.fromHex(salt)
   const I = String(username)
-  const v = new BigInteger(verifier, 16)
+  const v = SRPInteger.fromHex(verifier)
 
   // A % N > 0
-  if (A.mod(N).equals(BigInteger.ZERO)) {
+  if (A.mod(N).equals(SRPInteger.ZERO)) {
     // fixme: .code, .statusCode, etc.
     throw new Error('The client sent an invalid public ephemeral')
   }
@@ -61,7 +60,7 @@ exports.computeSession = function (serverEphemeral, clientPublicEphemeral, salt,
   const M = H(H(N).xor(H(g)), H(I), s, A, B, K)
 
   const expected = M
-  const actual = new BigInteger(clientSessionProof, 16)
+  const actual = SRPInteger.fromHex(clientSessionProof)
 
   if (!actual.equals(expected)) {
     // fixme: .code, .statusCode, etc.
@@ -72,7 +71,7 @@ exports.computeSession = function (serverEphemeral, clientPublicEphemeral, salt,
   const P = H(A, M, K)
 
   return {
-    key: padStart(K.toString(16), params.H_length_bits / 4, '0'),
-    proof: padStart(P.toString(16), params.H_length_bits / 4, '0')
+    key: K.toHex(),
+    proof: P.toHex()
   }
 }
