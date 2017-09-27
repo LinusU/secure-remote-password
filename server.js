@@ -22,7 +22,7 @@ exports.generateEphemeral = function (verifier) {
   }
 }
 
-exports.computeSession = function (serverEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof) {
+exports.deriveSession = function (serverEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof) {
   // N    A large safe prime (N = 2q+1, where q is prime)
   // g    A generator modulo N
   // H()  One-way hash function

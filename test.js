@@ -12,13 +12,13 @@ describe('Secure Remote Password', () => {
     const password = '$uper$ecure'
 
     const salt = client.generateSalt()
-    const verifier = client.computeVerifier(username, password, salt)
+    const verifier = client.deriveVerifier(username, password, salt)
 
     const clientEphemeral = client.generateEphemeral()
     const serverEphemeral = server.generateEphemeral(verifier)
 
-    const clientSession = client.computeSession(clientEphemeral, serverEphemeral.public, salt, username, password)
-    const serverSession = server.computeSession(serverEphemeral, clientEphemeral.public, salt, username, verifier, clientSession.proof)
+    const clientSession = client.deriveSession(clientEphemeral, serverEphemeral.public, salt, username, password)
+    const serverSession = server.deriveSession(serverEphemeral, clientEphemeral.public, salt, username, verifier, clientSession.proof)
 
     client.verifySession(clientEphemeral, clientSession, serverSession.proof)
 

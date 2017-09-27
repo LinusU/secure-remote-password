@@ -9,4 +9,4 @@ export interface Session {
 }
 
 export function generateEphemeral(verifier: string): Ephemeral
-export function computeSession(serverEphemeral: Ephemeral, clientPublicEphemeral: string, salt: string, username: string, verifier: string, clientSessionProof: string): Session
+export function deriveSession(serverEphemeral: Ephemeral, clientPublicEphemeral: string, salt: string, username: string, verifier: string, clientSessionProof: string): Session

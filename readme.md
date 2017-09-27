@@ -22,7 +22,7 @@ const username = 'linus@folkdatorn.se'
 const password = '$uper$ecure'
 
 const salt = srp.generateSalt()
-const verifier = srp.computeVerifier(username, password, salt)
+const verifier = srp.deriveVerifier(username, password, salt)
 
 console.log(salt)
 //=> FB95867E...
@@ -74,7 +74,7 @@ console.log(serverEphemeral.public)
 // Send `salt` and `serverEphemeral.public` to the client
 ```
 
-**3** - The client can now compute the shared strong session key, and a proof of it to provide to the server.
+**3** - The client can now derive the shared strong session key, and a proof of it to provide to the server.
 
 ```js
 const srp = require('secure-remote-password/client')
@@ -82,7 +82,7 @@ const srp = require('secure-remote-password/client')
 // This should come from the user logging in
 const password = '$uper$ecret'
 
-const clientSession = srp.computeSession(clientEphemeral, serverPublicEphemeral, salt, username, password)
+const clientSession = srp.deriveSession(clientEphemeral, serverPublicEphemeral, salt, username, password)
 
 console.log(clientSession.key)
 //=> 2A6FF04E...
@@ -93,12 +93,12 @@ console.log(clientSession.proof)
 // Send `clientSession.proof` to the server
 ```
 
-**4** - The server is also ready to compute the shared strong session key, and can verify that the client has the same key using the provided proof.
+**4** - The server is also ready to derive the shared strong session key, and can verify that the client has the same key using the provided proof.
 
 ```js
 const srp = require('secure-remote-password/server')
 
-const serverSession = srp.computeSession(serverEphemeral, clientPublicEphemeral, verifier, clientSessionProof)
+const serverSession = srp.deriveSession(serverEphemeral, clientPublicEphemeral, verifier, clientSessionProof)
 
 console.log(serverSession.key)
 //=> 2A6FF04E...
@@ -131,15 +131,15 @@ const Client = require('secure-remote-password/client')
 
 Generate a salt suitable for computing the verifier with.
 
-#### `Client.computeVerifier(username, password, salt) => string`
+#### `Client.deriveVerifier(username, password, salt) => string`
 
-Compute a verifier to be stored for subsequent authentication atempts.
+Derive a verifier to be stored for subsequent authentication atempts.
 
 #### `Client.generateEphemeral() => { secret: string, public: string }`
 
 Generate ephemeral values used to initiate an authentication session.
 
-#### `Client.computeSession(clientEphemeral, serverPublicEphemeral, salt, username, password) => { key: string, proof: string }`
+#### `Client.deriveSession(clientEphemeral, serverPublicEphemeral, salt, username, password) => { key: string, proof: string }`
 
 Comptue a session key and proof. The proof is to be sent to the server for verification.
 
@@ -157,7 +157,7 @@ const Server = require('secure-remote-password/server')
 
 Generate ephemeral values used to continue an authentication session.
 
-#### `computeSession(serverEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof)`
+#### `deriveSession(serverEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof)`
 
 Comptue a session key and proof. The proof is to be sent to the client for verification.
 
