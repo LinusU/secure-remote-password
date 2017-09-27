@@ -22,7 +22,8 @@ const username = 'linus@folkdatorn.se'
 const password = '$uper$ecure'
 
 const salt = srp.generateSalt()
-const verifier = srp.deriveVerifier(username, password, salt)
+const privateKey = srp.derivePrivateKey(salt, username, password)
+const verifier = srp.deriveVerifier(privateKey)
 
 console.log(salt)
 //=> FB95867E...
@@ -33,7 +34,7 @@ console.log(verifier)
 // Send `username`, `salt` and `verifier` to the server
 ```
 
-*note:* it is recommended to stretch the password with an appropriate key-stretching function, like [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2) before passing it to the SRP functions
+*note:* `derivePrivateKey` is provided for completeness with the SRP 6a specification. It is however recommended to use some form of "slow hashing", like [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2), to reduce the viability of a brute force attack against the verifier.
 
 ### Logging in
 
@@ -82,7 +83,8 @@ const srp = require('secure-remote-password/client')
 // This should come from the user logging in
 const password = '$uper$ecret'
 
-const clientSession = srp.deriveSession(clientEphemeral, serverPublicEphemeral, salt, username, password)
+const privateKey = srp.derivePrivateKey(salt, username, password)
+const clientSession = srp.deriveSession(clientEphemeral, serverPublicEphemeral, salt, username, privateKey)
 
 console.log(clientSession.key)
 //=> 2A6FF04E...
@@ -131,7 +133,11 @@ const Client = require('secure-remote-password/client')
 
 Generate a salt suitable for computing the verifier with.
 
-#### `Client.deriveVerifier(username, password, salt) => string`
+#### `Client.derivePrivateKey(salt, username, password) => string`
+
+Derives a private key suitable for computing the verifier with.
+
+#### `Client.deriveVerifier(privateKey) => string`
 
 Derive a verifier to be stored for subsequent authentication atempts.
 
@@ -139,7 +145,7 @@ Derive a verifier to be stored for subsequent authentication atempts.
 
 Generate ephemeral values used to initiate an authentication session.
 
-#### `Client.deriveSession(clientEphemeral, serverPublicEphemeral, salt, username, password) => { key: string, proof: string }`
+#### `Client.deriveSession(clientEphemeral, serverPublicEphemeral, salt, username, privateKey) => { key: string, proof: string }`
 
 Comptue a session key and proof. The proof is to be sent to the server for verification.
 

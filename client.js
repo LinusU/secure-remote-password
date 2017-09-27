@@ -10,11 +10,9 @@ exports.generateSalt = function () {
   return s.toHex()
 }
 
-exports.deriveVerifier = function (username, password, salt) {
-  // N    A large safe prime (N = 2q+1, where q is prime)
-  // g    A generator modulo N
+exports.derivePrivateKey = function (salt, username, password) {
   // H()  One-way hash function
-  const { N, g, H } = params
+  const { H } = params
 
   // s    User's salt
   // I    Username
@@ -25,6 +23,17 @@ exports.deriveVerifier = function (username, password, salt) {
 
   // x = H(s, H(I | ':' | p))  (s is chosen randomly)
   const x = H(s, H(`${I}:${p}`))
+
+  return x.toHex()
+}
+
+exports.deriveVerifier = function (privateKey) {
+  // N    A large safe prime (N = 2q+1, where q is prime)
+  // g    A generator modulo N
+  const { N, g } = params
+
+  // x    Private key (derived from p and s)
+  const x = SRPInteger.fromHex(privateKey)
 
   // v = g^x                   (computes password verifier)
   const v = g.modPow(x, N)
@@ -47,7 +56,7 @@ exports.generateEphemeral = function () {
   }
 }
 
-exports.deriveSession = function (clientEphemeral, serverPublicEphemeral, salt, username, password) {
+exports.deriveSession = function (clientEphemeral, serverPublicEphemeral, salt, username, privateKey) {
   // N    A large safe prime (N = 2q+1, where q is prime)
   // g    A generator modulo N
   // k    Multiplier parameter (k = H(N, g) in SRP-6a, k = 3 for legacy SRP-6)
@@ -57,14 +66,14 @@ exports.deriveSession = function (clientEphemeral, serverPublicEphemeral, salt, 
   // a    Secret ephemeral values
   // A,B  Public ephemeral values
   // s    User's salt
-  // p    Cleartext Password
   // I    Username
+  // x    Private key (derived from p and s)
   const a = SRPInteger.fromHex(clientEphemeral.secret)
   const A = SRPInteger.fromHex(clientEphemeral.public)
   const B = SRPInteger.fromHex(serverPublicEphemeral)
   const s = SRPInteger.fromHex(salt)
-  const p = String(password)
   const I = String(username)
+  const x = SRPInteger.fromHex(privateKey)
 
   // B % N > 0
   if (B.mod(N).equals(SRPInteger.ZERO)) {
@@ -74,9 +83,6 @@ exports.deriveSession = function (clientEphemeral, serverPublicEphemeral, salt, 
 
   // u = H(A, B)
   const u = H(A, B)
-
-  // x = H(s, H(I | ':' | p))  (user enters password)
-  const x = H(s, H(`${I}:${p}`))
 
   // S = (B - kg^x) ^ (a + ux)
   const S = B.subtract(k.multiply(g.modPow(x, N))).modPow(a.add(u.multiply(x)), N)
