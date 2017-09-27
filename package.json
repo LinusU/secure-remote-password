@@ -1,6 +1,6 @@
 {
   "name": "secure-remote-password",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "MIT",
   "repository": "LinusU/secure-remote-password",
   "scripts": {
