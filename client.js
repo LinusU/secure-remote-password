@@ -5,7 +5,7 @@ const SRPInteger = require('./lib/srp-integer')
 
 exports.generateSalt = function () {
   // s    User's salt
-  const s = SRPInteger.randomInteger()
+  const s = SRPInteger.randomInteger(params.hashOutputBytes)
 
   return s.toHex()
 }
@@ -47,7 +47,7 @@ exports.generateEphemeral = function () {
   const { N, g } = params
 
   // A = g^a                  (a = random number)
-  const a = SRPInteger.randomInteger()
+  const a = SRPInteger.randomInteger(params.hashOutputBytes)
   const A = g.modPow(a, N)
 
   return {
