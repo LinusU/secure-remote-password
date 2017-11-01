@@ -13,7 +13,7 @@ exports.generateEphemeral = function (verifier) {
   const v = SRPInteger.fromHex(verifier)
 
   // B = kv + g^b             (b = random number)
-  const b = SRPInteger.randomInteger()
+  const b = SRPInteger.randomInteger(params.hashOutputBytes)
   const B = k.multiply(v).add(g.modPow(b, N)).mod(N)
 
   return {
