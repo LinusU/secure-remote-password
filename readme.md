@@ -100,7 +100,7 @@ console.log(clientSession.proof)
 ```js
 const srp = require('secure-remote-password/server')
 
-const serverSession = srp.deriveSession(serverEphemeral, clientPublicEphemeral, verifier, clientSessionProof)
+const serverSession = srp.deriveSession(serverEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof)
 
 console.log(serverSession.key)
 //=> 2A6FF04E...
