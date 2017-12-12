@@ -56,7 +56,7 @@ exports.generateEphemeral = function () {
   }
 }
 
-exports.deriveSession = function (clientEphemeral, serverPublicEphemeral, salt, username, privateKey) {
+exports.deriveSession = function (clientSecretEphemeral, serverPublicEphemeral, salt, username, privateKey) {
   // N    A large safe prime (N = 2q+1, where q is prime)
   // g    A generator modulo N
   // k    Multiplier parameter (k = H(N, g) in SRP-6a, k = 3 for legacy SRP-6)
@@ -64,16 +64,18 @@ exports.deriveSession = function (clientEphemeral, serverPublicEphemeral, salt, 
   const { N, g, k, H } = params
 
   // a    Secret ephemeral values
-  // A,B  Public ephemeral values
+  // B    Public ephemeral values
   // s    User's salt
   // I    Username
   // x    Private key (derived from p and s)
-  const a = SRPInteger.fromHex(clientEphemeral.secret)
-  const A = SRPInteger.fromHex(clientEphemeral.public)
+  const a = SRPInteger.fromHex(clientSecretEphemeral)
   const B = SRPInteger.fromHex(serverPublicEphemeral)
   const s = SRPInteger.fromHex(salt)
   const I = String(username)
   const x = SRPInteger.fromHex(privateKey)
+
+  // A = g^a                  (a = random number)
+  const A = g.modPow(a, N)
 
   // B % N > 0
   if (B.mod(N).equals(SRPInteger.ZERO)) {
@@ -99,14 +101,14 @@ exports.deriveSession = function (clientEphemeral, serverPublicEphemeral, salt, 
   }
 }
 
-exports.verifySession = function (clientEphemeral, clientSession, serverSessionProof) {
+exports.verifySession = function (clientPublicEphemeral, clientSession, serverSessionProof) {
   // H()  One-way hash function
   const { H } = params
 
   // A    Public ephemeral values
   // M    Proof of K
   // K    Shared, strong session key
-  const A = SRPInteger.fromHex(clientEphemeral.public)
+  const A = SRPInteger.fromHex(clientPublicEphemeral)
   const M = SRPInteger.fromHex(clientSession.proof)
   const K = SRPInteger.fromHex(clientSession.key)
 
