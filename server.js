@@ -22,24 +22,27 @@ exports.generateEphemeral = function (verifier) {
   }
 }
 
-exports.deriveSession = function (serverEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof) {
+exports.deriveSession = function (serverSecretEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof) {
   // N    A large safe prime (N = 2q+1, where q is prime)
   // g    A generator modulo N
+  // k    Multiplier parameter (k = H(N, g) in SRP-6a, k = 3 for legacy SRP-6)
   // H()  One-way hash function
-  const { N, g, H } = params
+  const { N, g, k, H } = params
 
   // b    Secret ephemeral values
-  // A,B  Public ephemeral values
+  // A    Public ephemeral values
   // s    User's salt
   // p    Cleartext Password
   // I    Username
   // v    Password verifier
-  const b = SRPInteger.fromHex(serverEphemeral.secret)
+  const b = SRPInteger.fromHex(serverSecretEphemeral)
   const A = SRPInteger.fromHex(clientPublicEphemeral)
-  const B = SRPInteger.fromHex(serverEphemeral.public)
   const s = SRPInteger.fromHex(salt)
   const I = String(username)
   const v = SRPInteger.fromHex(verifier)
+
+  // B = kv + g^b             (b = random number)
+  const B = k.multiply(v).add(g.modPow(b, N)).mod(N)
 
   // A % N > 0
   if (A.mod(N).equals(SRPInteger.ZERO)) {

@@ -18,10 +18,10 @@ describe('Secure Remote Password', () => {
     const clientEphemeral = client.generateEphemeral()
     const serverEphemeral = server.generateEphemeral(verifier)
 
-    const clientSession = client.deriveSession(clientEphemeral, serverEphemeral.public, salt, username, privateKey)
-    const serverSession = server.deriveSession(serverEphemeral, clientEphemeral.public, salt, username, verifier, clientSession.proof)
+    const clientSession = client.deriveSession(clientEphemeral.secret, serverEphemeral.public, salt, username, privateKey)
+    const serverSession = server.deriveSession(serverEphemeral.secret, clientEphemeral.public, salt, username, verifier, clientSession.proof)
 
-    client.verifySession(clientEphemeral, clientSession, serverSession.proof)
+    client.verifySession(clientEphemeral.public, clientSession, serverSession.proof)
 
     assert.strictEqual(clientSession.key, serverSession.key)
   })
