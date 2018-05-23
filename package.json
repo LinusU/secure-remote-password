@@ -1,5 +1,5 @@
 {
-  "name": "secure-remote-password",
+  "name": "secure-remote-password-pre-rfc5054",
   "version": "0.3.0",
   "license": "MIT",
   "repository": "LinusU/secure-remote-password",
