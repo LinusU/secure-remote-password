@@ -19,6 +19,9 @@ function concat (buffers) {
   return combined.buffer
 }
 
+/**
+ * @param {(string | SRPInteger)[]} args
+ */
 module.exports = function sha256 (...args) {
   const buffer = concat(args.map((arg) => {
     if (arg instanceof SRPInteger) {
