@@ -53,10 +53,10 @@ const clientEphemeral = srp.generateEphemeral()
 console.log(clientEphemeral.public)
 //=> DE63C51E...
 
-// Send `username` and `clientEphemeral.public` to the server
+// Send `username` to the server
 ```
 
-**2** - The server receives the client's public ephemeral value and username. Using the username we retrieve the `salt` and `verifier` from our user database. We then generate our own ephemeral value pair.
+**2** - The server receives the client's username. Using the username we retrieve the `salt` and `verifier` from our user database. We then generate our own ephemeral value pair.
 
 *note:* if no user cannot be found in the database, a bogus salt and ephemeral value should be returned, to avoid leaking which users have signed up
 
@@ -93,7 +93,7 @@ console.log(clientSession.key)
 console.log(clientSession.proof)
 //=> 6F8F4AC3
 
-// Send `clientSession.proof` to the server
+// Send `clientSession.proof` and `clientEphemeral.public` to the server
 ```
 
 **4** - The server is also ready to derive the shared strong session key, and can verify that the client has the same key using the provided proof.
