@@ -34,7 +34,19 @@ console.log(verifier)
 // Send `username`, `salt` and `verifier` to the server
 ```
 
-*note:* `derivePrivateKey` is provided for completeness with the SRP 6a specification. It is however recommended to use some form of "slow hashing", like [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2), to reduce the viability of a brute force attack against the verifier.
+
+*note:* `derivePrivateKey` is provided for completeness with the SRP 6a specification. It is however recommended to use some form of "slow hashing", like [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2), to reduce the viability of a brute force attack against the verifier, e.g.:
+
+```js
+const pbkdf2 = require('@ctrlpanel/pbkdf2')
+const privateKey = await pbkdf2(
+  Buffer.from([username, password].join(':'), 'utf8'),
+  Buffer.from(salt, 'hex'),
+  100000, // Iterations
+  32, // Key length
+  'SHA-256' // Hash
+  ).then(byteArray => Buffer.from(byteArray).toString('hex'))
+```
 
 ### Logging in
 
