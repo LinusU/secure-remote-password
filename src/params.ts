@@ -1,10 +1,8 @@
-'use strict'
-
-const sha256 = require('./sha256')
-const SRPInteger = require('./srp-integer')
+import sha256 from './sha256'
+import SRPInteger from './srp-integer'
 
 const input = {
-  largeSafePrime: `
+	largeSafePrime: `
     AC6BDB41 324A9A9B F166DE5E 1389582F AF72B665 1987EE07 FC319294
     3DB56050 A37329CB B4A099ED 8193E075 7767A13D D52312AB 4B03310D
     CD7F48A9 DA04FD50 E8083969 EDB767B0 CF609517 9A163AB3 661A05FB
@@ -16,18 +14,18 @@ const input = {
     94B5C803 D89F7AE4 35DE236D 525F5475 9B65E372 FCD68EF2 0FA7111F
     9E4AFF73
   `,
-  generatorModulo: '02',
-  hashFunction: 'sha256',
-  hashOutputBytes: (256 / 8)
+	generatorModulo: '02',
+	hashFunction: 'sha256',
+	hashOutputBytes: 256 / 8,
 }
 
 // N    A large safe prime (N = 2q+1, where q is prime)
 // g    A generator modulo N
 // k    Multiplier parameter (k = H(N, g) in SRP-6a, k = 3 for legacy SRP-6)
 // H()  One-way hash function
-exports.N = SRPInteger.fromHex(input.largeSafePrime.replace(/\s+/g, ''))
-exports.g = SRPInteger.fromHex(input.generatorModulo.replace(/\s+/g, ''))
-exports.k = sha256(exports.N, exports.g)
-exports.H = sha256
+export const N = SRPInteger.fromHex(input.largeSafePrime.replace(/\s+/g, ''))
+export const g = SRPInteger.fromHex(input.generatorModulo.replace(/\s+/g, ''))
+export const k = sha256(exports.N, exports.g)
+export const H = sha256
 
-exports.hashOutputBytes = input.hashOutputBytes
+export const hashOutputBytes = input.hashOutputBytes
