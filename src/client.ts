@@ -1,3 +1,4 @@
+import { Session } from '.'
 import * as params from './params'
 import SRPInteger from './srp-integer'
 
@@ -64,7 +65,7 @@ export const deriveSession = (
 	salt: string,
 	username: string,
 	privateKey: string
-) => {
+): Session => {
 	// N    A large safe prime (N = 2q+1, where q is prime)
 	// g    A generator modulo N
 	// k    Multiplier parameter (k = H(N, g) in SRP-6a, k = 3 for legacy SRP-6)
@@ -114,10 +115,7 @@ export const deriveSession = (
 
 export const verifySession = (
 	clientPublicEphemeral: string,
-	clientSession: {
-		proof: string
-		key: string
-	},
+	clientSession: Session,
 	serverSessionProof: string
 ) => {
 	// H()  One-way hash function
