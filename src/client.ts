@@ -24,7 +24,10 @@ export const derivePrivateKey = (
 	const I = String(username)
 	const p = String(password)
 
-	// x = H(s, H(I | ':' | p))  (s is chosen randomly)
+	// x = H(s, H(I | p))  (s is chosen randomly)
+	/** Editor's note
+	 * Error happening here on SRPInteger.fromHex: 'Expected string to be an even number of characters' when calling hexToArrayBuffer
+	 */
 	const x = H(s, H(SRPInteger.fromHex(`${I}:${p}`)))
 
 	return x.toHex()

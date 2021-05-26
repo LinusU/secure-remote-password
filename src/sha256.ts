@@ -2,7 +2,6 @@ import arrayBufferToHex from 'array-buffer-to-hex'
 import encodeUtf8 from 'encode-utf8'
 import hexToArrayBuffer from 'hex-to-array-buffer'
 import rawSha256 from 'crypto-digest-sync/sha256'
-
 import SRPInteger from './srp-integer'
 
 function concat(buffers: ArrayBuffer[]) {
