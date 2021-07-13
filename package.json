@@ -5,7 +5,7 @@
   "repository": "LinusU/secure-remote-password",
   "scripts": {
     "format": "prettier '**/*.{js,md,ts,tsx}' --write",
-    "test": "standard && mocha"
+    "test": "mocha"
   },
   "browser": {
     "./lib/sha256.js": "./browser/sha256.js"
@@ -17,16 +17,16 @@
     "array-buffer-to-hex": "^1.0.0",
     "crypto-digest-sync": "^1.0.0",
     "crypto-random-hex": "^1.0.0",
-    "encode-utf8": "^1.0.1",
+    "encode-utf8": "^1.0.3",
     "hex-to-array-buffer": "^1.1.0",
     "jsbn": "^1.1.0",
     "pad-start": "^1.0.2"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
+    "microbundle": "^0.13.3",
+    "mocha": "^9.0.2",
     "prettier": "^2.3.2",
     "prettier-plugin-organize-imports": "^2.2.0",
-    "standard": "^12.0.1",
     "typescript": "^4.3.5"
   }
 }
