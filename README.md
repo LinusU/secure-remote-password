@@ -1,11 +1,11 @@
 # Secure Remote Password for JavaScript
 
-A modern [SRP](http://srp.stanford.edu) implementation for Node.js and Web Browsers.
+A modern [SRP](http://srp.stanford.edu) implementation for modern Node.js (v15+) and web browsers.
 
 ## Installation
 
 ```sh
-npm install --save secure-remote-password
+yarn add @zoontek/secure-remote-password
 ```
 
 ## Usage
@@ -14,16 +14,16 @@ npm install --save secure-remote-password
 
 When creating an account with the server, the client will provide a salt and a verifier for the server to store. They are calculated by the client as follows:
 
-```js
-const srp = require("secure-remote-password/client");
+```ts
+import * as client from "@zoontek/secure-remote-password/client";
 
 // These should come from the user signing up
 const username = "linus@folkdatorn.se";
 const password = "$uper$ecure";
 
-const salt = srp.generateSalt();
-const privateKey = srp.derivePrivateKey(salt, username, password);
-const verifier = srp.deriveVerifier(privateKey);
+const salt = client.generateSalt();
+const privateKey = await client.derivePrivateKey(salt, username, password);
+const verifier = client.deriveVerifier(privateKey);
 
 console.log(salt);
 //=> FB95867E...
@@ -42,13 +42,13 @@ Authenticating with the server involves mutliple steps.
 
 **1** - The client generates a secret/public ephemeral value pair.
 
-```js
-const srp = require("secure-remote-password/client");
+```ts
+import * as client from "@zoontek/secure-remote-password/client";
 
 // This should come from the user logging in
 const username = "linus@folkdatorn.se";
 
-const clientEphemeral = srp.generateEphemeral();
+const clientEphemeral = client.generateEphemeral();
 
 console.log(clientEphemeral.public);
 //=> DE63C51E...
@@ -60,14 +60,14 @@ console.log(clientEphemeral.public);
 
 _note:_ if no user cannot be found in the database, a bogus salt and ephemeral value should be returned, to avoid leaking which users have signed up
 
-```js
-const srp = require("secure-remote-password/server");
+```ts
+import * as server from "@zoontek/secure-remote-password/server";
 
 // This should come from the user database
 const salt = "FB95867E...";
 const verifier = "9392093F...";
 
-const serverEphemeral = srp.generateEphemeral(verifier);
+const serverEphemeral = await server.generateEphemeral(verifier);
 
 console.log(serverEphemeral.public);
 //=> DA084F5C...
@@ -78,14 +78,14 @@ console.log(serverEphemeral.public);
 
 **3** - The client can now derive the shared strong session key, and a proof of it to provide to the server.
 
-```js
-const srp = require("secure-remote-password/client");
+```ts
+import * as client from "@zoontek/secure-remote-password/client";
 
 // This should come from the user logging in
 const password = "$uper$ecret";
+const privateKey = await client.derivePrivateKey(salt, username, password);
 
-const privateKey = srp.derivePrivateKey(salt, username, password);
-const clientSession = srp.deriveSession(
+const clientSession = await client.deriveSession(
   clientEphemeral.secret,
   serverPublicEphemeral,
   salt,
@@ -104,13 +104,13 @@ console.log(clientSession.proof);
 
 **4** - The server is also ready to derive the shared strong session key, and can verify that the client has the same key using the provided proof.
 
-```js
-const srp = require("secure-remote-password/server");
+```ts
+import * as server from "@zoontek/secure-remote-password/server";
 
 // Previously stored `serverEphemeral.secret`
 const serverSecretEphemeral = "784D6E83...";
 
-const serverSession = srp.deriveSession(
+const serverSession = await server.deriveSession(
   serverSecretEphemeral,
   clientPublicEphemeral,
   salt,
@@ -130,10 +130,14 @@ console.log(serverSession.proof);
 
 **5** - Finally, the client can verify that the server have derived the correct strong session key, using the proof that the server sent back.
 
-```js
-const srp = require("secure-remote-password/client");
+```ts
+import client from "@zoontek/secure-remote-password/client";
 
-srp.verifySession(clientEphemeral.public, clientSession, serverSessionProof);
+await client.verifySession(
+  clientEphemeral.public,
+  clientSession,
+  serverSessionProof,
+);
 
 // All done!
 ```
@@ -142,46 +146,46 @@ srp.verifySession(clientEphemeral.public, clientSession, serverSessionProof);
 
 ### `Client`
 
-```js
-const Client = require("secure-remote-password/client");
+```ts
+import * as client from "@zoontek/secure-remote-password/client";
 ```
 
-#### `Client.generateSalt() => string`
+#### `client.generateSalt: () => string`
 
 Generate a salt suitable for computing the verifier with.
 
-#### `Client.derivePrivateKey(salt, username, password) => string`
+#### `client.derivePrivateKey: (salt: string, username: string, password: string) => Promise<string>`
 
 Derives a private key suitable for computing the verifier with.
 
-#### `Client.deriveVerifier(privateKey) => string`
+#### `client.deriveVerifier: (privateKey: string) => string`
 
 Derive a verifier to be stored for subsequent authentication atempts.
 
-#### `Client.generateEphemeral() => { secret: string, public: string }`
+#### `client.generateEphemeral: () => Ephemeral`
 
 Generate ephemeral values used to initiate an authentication session.
 
-#### `Client.deriveSession(clientSecretEphemeral, serverPublicEphemeral, salt, username, privateKey) => { key: string, proof: string }`
+#### `client.deriveSession: (clientSecretEphemeral: string, serverPublicEphemeral: string, salt: string, username: string, privateKey: string) => Promise<Session>`
 
 Comptue a session key and proof. The proof is to be sent to the server for verification.
 
-#### `Client.verifySession(clientPublicEphemeral, clientSession, serverSessionProof) => void`
+#### `client.verifySession: (clientPublicEphemeral: string, clientSession: Session, serverSessionProof: string) => Promise<void>`
 
 Verifies the server provided session proof. Throws an error if the session proof is invalid.
 
 ### `Server`
 
-```js
-const Server = require("secure-remote-password/server");
+```ts
+import * as server from "@zoontek/secure-remote-password/server";
 ```
 
-#### `generateEphemeral(verifier)`
+#### `server.generateEphemeral: (verifier: string) => Promise<Ephemeral>`
 
 Generate ephemeral values used to continue an authentication session.
 
-#### `deriveSession(serverSecretEphemeral, clientPublicEphemeral, salt, username, verifier, clientSessionProof)`
+#### `server.deriveSession: (serverSecretEphemeral: string, clientPublicEphemeral: string, salt: string, username: string, verifier: string, clientSessionProof: string) => Promise<Session>`
 
-Comptue a session key and proof. The proof is to be sent to the client for verification.
+Compute a session key and proof. The proof is to be sent to the client for verification.
 
 Throws an error if the session proof from the client is invalid.
