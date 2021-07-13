@@ -1496,11 +1496,6 @@ argparse@^1.0.7:
   dependencies:
     sprintf-js "~1.0.2"
 
-array-buffer-to-hex@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/array-buffer-to-hex/-/array-buffer-to-hex-1.0.0.tgz#9c76e53010ef7bf7bf8a27ebbb41d24e1d83edf4"
-  integrity sha512-arycdkxgK1cj6s03GDb96tlCxOl1n3kg9M2OHseUc6Pqyqp+lgfceFPmG507eI5V+oxOSEnlOw/dFc7LXBXF4Q==
-
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
@@ -1952,18 +1947,6 @@ cross-spawn@^7.0.3:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
-
-crypto-digest-sync@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/crypto-digest-sync/-/crypto-digest-sync-1.0.0.tgz#7dcdb12a54c19af8d138eb5f533f3c4c6bb4c0ed"
-  integrity sha512-UQBOB5z+HF4iA8shKQ3PPwhCmdFAihwcytD1Qh4uiz78x04cZZmKtZ1F1VyAjkrA8uEZqXt2tMXfj3dJHtcbng==
-
-crypto-random-hex@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/crypto-random-hex/-/crypto-random-hex-1.0.0.tgz#f15d4f4a8ce01e9d05e423390b3b98309c8e86de"
-  integrity sha512-1DuZQ03El13TRgfrqbbjW40Gvi4OKInny/Wxqj23/JMXe214C/3Tlz92bKXWDW3NZT5RjXUGdYW4qiIOUPf+cA==
-  dependencies:
-    array-buffer-to-hex "^1.0.0"
 
 css-color-names@0.0.4, css-color-names@^0.0.4:
   version "0.0.4"

@@ -43,8 +43,6 @@
     "trailingComma": "all"
   },
   "dependencies": {
-    "crypto-digest-sync": "^1.0.0",
-    "crypto-random-hex": "^1.0.0",
     "jsbn": "^1.1.0"
   },
   "devDependencies": {
