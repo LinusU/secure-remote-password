@@ -40,7 +40,7 @@ _note:_ The use of a username as part of the verifier calculation means that if 
 
 ### Logging in
 
-Authenticating with the server involves mutliple steps.
+Authenticating with the server involves multiple steps.
 
 **1** - The client generates a secret/public ephemeral value pair.
 
