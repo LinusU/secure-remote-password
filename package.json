@@ -1,25 +1,60 @@
 {
-  "name": "secure-remote-password",
-  "version": "0.3.1",
+  "name": "@zoontek/secure-remote-password",
+  "version": "0.1.0",
   "license": "MIT",
-  "repository": "LinusU/secure-remote-password",
-  "scripts": {
-    "test": "standard && mocha"
+  "description": "Dead simple React global state management based on use-subscription",
+  "author": "Linus Unnebäck <linus@folkdatorn.se>",
+  "contributors": [
+    "Mathieu Actherneone <zoontek@gmail.com>"
+  ],
+  "homepage": "https://github.com/zoontek/secure-remote-password#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zoontek/secure-remote-password.git"
   },
-  "browser": {
-    "./lib/sha256.js": "./browser/sha256.js"
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./client": "./dist/client.js",
+    "./server": "./dist/server.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "srp",
+    "srp6a",
+    "authentication",
+    "remote",
+    "password"
+  ],
+  "scripts": {
+    "build": "yarn clean && microbundle -f cjs src/{index,client,server}.ts",
+    "clean": "rm -rf dist",
+    "dev": "microbundle watch",
+    "format": "prettier '**/*.{js,md,ts,tsx}' --write",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "tscheck": "tsc --noEmit",
+    "prepare": "yarn test && yarn build"
+  },
+  "prettier": {
+    "trailingComma": "all"
   },
   "dependencies": {
-    "array-buffer-to-hex": "^1.0.0",
-    "crypto-digest-sync": "^1.0.0",
-    "crypto-random-hex": "^1.0.0",
-    "encode-utf8": "^1.0.1",
-    "hex-to-array-buffer": "^1.1.0",
-    "jsbn": "^1.1.0",
-    "pad-start": "^1.0.2"
+    "jsbn": "^1.1.0"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "standard": "^12.0.1"
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/jest": "^26.0.24",
+    "@types/jsbn": "^1.2.29",
+    "babel-jest": "^27.0.6",
+    "jest": "^27.0.6",
+    "microbundle": "^0.13.3",
+    "prettier": "^2.3.2",
+    "prettier-plugin-organize-imports": "^2.2.0",
+    "typescript": "^4.3.5"
   }
 }
