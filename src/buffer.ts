@@ -32,12 +32,8 @@ export const bufferToHex = (buffer: ArrayBufferLike): string => {
   let result = "";
 
   for (let i = 0; i < view.length; i++) {
-    const item = view[i];
-
-    if (item != null) {
-      const value = item.toString(16);
-      result += value.length === 1 ? "0" + value : value;
-    }
+    const value = view[i].toString(16);
+    result += value.length === 1 ? "0" + value : value;
   }
 
   return result;

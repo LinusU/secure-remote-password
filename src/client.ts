@@ -2,6 +2,8 @@ import { params } from "./params";
 import { SRPInt } from "./SRPInt";
 import { Ephemeral, Session } from "./types";
 
+export * from "./types";
+
 export const generateSalt = (): string => {
   const s = SRPInt.randomInteger(params.hashOutputBytes); // User's salt
   return s.toHex();
@@ -66,18 +68,17 @@ export const deriveSession = async (
     throw new Error("The server sent an invalid public ephemeral");
   }
 
-  const u = await H(A, B);
+  const [k1, u] = await Promise.all([k, H(A, B)]);
 
   // S = (B - kg^x) ^ (a + ux)
-  const S = B.subtract((await k).multiply(g.modPow(x, N))).modPow(
+  const S = B.subtract(k1.multiply(g.modPow(x, N))).modPow(
     a.add(u.multiply(x)),
     N,
   );
 
-  const K = await H(S);
-
+  const [K, HN, Hg, HI] = await Promise.all([H(S), H(N), H(g), H(I)]);
   // M = H(H(N) xor H(g), H(I), s, A, B, K)
-  const M = await H((await H(N)).xor(await H(g)), await H(I), s, A, B, K);
+  const M = await H(HN.xor(Hg), HI, s, A, B, K);
 
   return {
     key: K.toHex(),

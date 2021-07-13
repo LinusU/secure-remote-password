@@ -2,13 +2,14 @@ import { params } from "./params";
 import { SRPInt } from "./SRPInt";
 import { Ephemeral, Session } from "./types";
 
+export * from "./types";
+
 export const generateEphemeral = async (
   verifier: string,
 ): Promise<Ephemeral> => {
   const { N, g, k } = params;
 
   const v = SRPInt.fromHex(verifier); // Password verifier
-
   const b = SRPInt.randomInteger(params.hashOutputBytes);
   const B = (await k).multiply(v).add(g.modPow(b, N)).mod(N); // B = kv + g^b
 
@@ -45,10 +46,10 @@ export const deriveSession = async (
   const u = await H(A, B);
   const S = A.multiply(v.modPow(u, N)).modPow(b, N); // S = (Av^u) ^ b (computes session key)
 
-  const K = await H(S);
+  const [K, HN, Hg, HI] = await Promise.all([H(S), H(N), H(g), H(I)]);
 
   // M = H(H(N) xor H(g), H(I), s, A, B, K)
-  const M = await H((await H(N)).xor(await H(g)), await H(I), s, A, B, K);
+  const M = await H(HN.xor(Hg), HI, s, A, B, K);
 
   const expected = M;
   const actual = SRPInt.fromHex(clientSessionProof);
