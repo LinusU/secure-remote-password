@@ -146,47 +146,90 @@ await client.verifySession(
 
 ## API
 
-### `Client`
-
 ```ts
-import * as client from "@zoontek/secure-remote-password/client";
+import {
+  derivePrivateKey,
+  deriveSession,
+  deriveVerifier,
+  generateEphemeral,
+  generateSalt,
+  verifySession,
+} from "@zoontek/secure-remote-password/client";
 ```
 
-#### `client.generateSalt: () => string`
+```ts
+type generateSalt = () => string;
+```
 
 Generate a salt suitable for computing the verifier with.
 
-#### `client.derivePrivateKey: (salt: string, username: string, password: string) => Promise<string>`
+```ts
+type derivePrivateKey = (
+  salt: string,
+  username: string,
+  password: string,
+) => Promise<string>;
+```
 
 Derives a private key suitable for computing the verifier with.
 
-#### `client.deriveVerifier: (privateKey: string) => string`
+```ts
+type deriveVerifier = (privateKey: string) => string;
+```
 
-Derive a verifier to be stored for subsequent authentication atempts.
+Derive a verifier to be stored for subsequent authentication attempts.
 
-#### `client.generateEphemeral: () => Ephemeral`
+```ts
+type generateEphemeral = () => Ephemeral;
+```
 
 Generate ephemeral values used to initiate an authentication session.
 
-#### `client.deriveSession: (clientSecretEphemeral: string, serverPublicEphemeral: string, salt: string, username: string, privateKey: string) => Promise<Session>`
+```ts
+type deriveSession = (
+  clientSecretEphemeral: string,
+  serverPublicEphemeral: string,
+  salt: string,
+  username: string,
+  privateKey: string,
+) => Promise<Session>;
+```
 
-Comptue a session key and proof. The proof is to be sent to the server for verification.
+Compute a session key and proof. The proof is to be sent to the server for verification.
 
-#### `client.verifySession: (clientPublicEphemeral: string, clientSession: Session, serverSessionProof: string) => Promise<void>`
+```ts
+type verifySession = (
+  clientPublicEphemeral: string,
+  clientSession: Session,
+  serverSessionProof: string,
+) => Promise<void>;
+```
 
 Verifies the server provided session proof. Throws an error if the session proof is invalid.
 
-### `Server`
-
 ```ts
-import * as server from "@zoontek/secure-remote-password/server";
+import {
+  deriveSession,
+  generateEphemeral,
+} from "@zoontek/secure-remote-password/server";
 ```
 
-#### `server.generateEphemeral: (verifier: string) => Promise<Ephemeral>`
+```ts
+type generateEphemeral = (verifier: string) => Promise<Ephemeral>;
+```
 
 Generate ephemeral values used to continue an authentication session.
 
-#### `server.deriveSession: (serverSecretEphemeral: string, clientPublicEphemeral: string, salt: string, username: string, verifier: string, clientSessionProof: string) => Promise<Session>`
+```ts
+type deriveSession = (
+  serverSecretEphemeral: string,
+  clientPublicEphemeral: string,
+  salt: string,
+  username: string,
+  verifier: string,
+  clientSessionProof: string,
+) => Promise<Session>;
+```
 
 Compute a session key and proof. The proof is to be sent to the client for verification.
 
