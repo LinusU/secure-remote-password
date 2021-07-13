@@ -30,7 +30,7 @@
     "password"
   ],
   "scripts": {
-    "build": "yarn clean && microbundle -f cjs src/*.ts",
+    "build": "yarn clean && microbundle -f cjs src/{client,server}.ts",
     "clean": "rm -rf dist",
     "dev": "microbundle watch",
     "format": "prettier '**/*.{js,md,ts,tsx}' --write",
