@@ -3,9 +3,9 @@
   "version": "0.3.1",
   "license": "MIT",
   "description": "Dead simple React global state management based on use-subscription",
-  "author": "Linus Unnebäck",
+  "author": "Linus Unnebäck <linus@folkdatorn.se>",
   "contributors": [
-    "Frederic Godin <frederic.godin@swan.io>"
+    "Mathieu Actherneone <zoontek@gmail.com>"
   ],
   "homepage": "https://github.com/zoontek/secure-remote-password#readme",
   "repository": {
