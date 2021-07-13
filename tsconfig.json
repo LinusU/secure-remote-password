@@ -1,0 +1,26 @@
+{
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ES2015",
+    "lib": ["ES2015", "DOM"],
+    "moduleResolution": "Node",
+    "outDir": "dist/",
+
+    "declaration": true,
+    "sourceMap": true,
+    "strict": true,
+    "stripInternal": true,
+
+    // https://www.typescriptlang.org/tsconfig#Type_Checking_6248
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}

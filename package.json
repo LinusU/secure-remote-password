@@ -2,13 +2,41 @@
   "name": "secure-remote-password",
   "version": "0.3.1",
   "license": "MIT",
-  "repository": "LinusU/secure-remote-password",
-  "scripts": {
-    "format": "prettier '**/*.{js,md,ts,tsx}' --write",
-    "test": "mocha"
+  "description": "Dead simple React global state management based on use-subscription",
+  "author": "Linus Unnebäck",
+  "contributors": [
+    "Frederic Godin <frederic.godin@swan.io>"
+  ],
+  "homepage": "https://github.com/zoontek/secure-remote-password#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zoontek/secure-remote-password.git"
   },
-  "browser": {
-    "./lib/sha256.js": "./browser/sha256.js"
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./client": "./dist/client.js",
+    "./server": "./dist/server.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "srp",
+    "srp6a",
+    "authentication",
+    "remote",
+    "password"
+  ],
+  "scripts": {
+    "build": "yarn clean && microbundle -f cjs src/*.ts",
+    "clean": "rm -rf dist",
+    "dev": "microbundle watch",
+    "format": "prettier '**/*.{js,md,ts,tsx}' --write",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "prepare": "yarn test && yarn build"
   },
   "prettier": {
     "trailingComma": "all"
