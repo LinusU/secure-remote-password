@@ -45,14 +45,13 @@
   "dependencies": {
     "crypto-digest-sync": "^1.0.0",
     "crypto-random-hex": "^1.0.0",
-    "encode-utf8": "^1.0.3",
-    "jsbn": "^1.1.0",
-    "pad-start": "^1.0.2"
+    "jsbn": "^1.1.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-typescript": "^7.14.5",
     "@types/jest": "^26.0.24",
+    "@types/jsbn": "^1.2.29",
     "babel-jest": "^27.0.6",
     "jest": "^27.0.6",
     "microbundle": "^0.13.3",
