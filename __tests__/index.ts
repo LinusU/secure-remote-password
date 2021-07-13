@@ -1,10 +1,6 @@
-/* eslint-env mocha */
-
-const assert = require("assert");
-
-const client = require("./client");
-const server = require("./server");
-const SRPInteger = require("./lib/srp-integer");
+import client from "../client";
+import SRPInteger from "../lib/srp-integer";
+import server from "../server";
 
 describe("Secure Remote Password", () => {
   it("should authenticate a user", () => {
@@ -40,20 +36,20 @@ describe("Secure Remote Password", () => {
       serverSession.proof,
     );
 
-    assert.strictEqual(clientSession.key, serverSession.key);
+    expect(clientSession.key).toStrictEqual(serverSession.key);
   });
 });
 
 describe("SRPInteger", () => {
   it("should keep padding when going back and forth", () => {
-    assert.strictEqual(SRPInteger.fromHex("a").toHex(), "a");
-    assert.strictEqual(SRPInteger.fromHex("0a").toHex(), "0a");
-    assert.strictEqual(SRPInteger.fromHex("00a").toHex(), "00a");
-    assert.strictEqual(SRPInteger.fromHex("000a").toHex(), "000a");
-    assert.strictEqual(SRPInteger.fromHex("0000a").toHex(), "0000a");
-    assert.strictEqual(SRPInteger.fromHex("00000a").toHex(), "00000a");
-    assert.strictEqual(SRPInteger.fromHex("000000a").toHex(), "000000a");
-    assert.strictEqual(SRPInteger.fromHex("0000000a").toHex(), "0000000a");
-    assert.strictEqual(SRPInteger.fromHex("00000000a").toHex(), "00000000a");
+    expect(SRPInteger.fromHex("a").toHex()).toStrictEqual("a");
+    expect(SRPInteger.fromHex("0a").toHex()).toStrictEqual("0a");
+    expect(SRPInteger.fromHex("00a").toHex()).toStrictEqual("00a");
+    expect(SRPInteger.fromHex("000a").toHex()).toStrictEqual("000a");
+    expect(SRPInteger.fromHex("0000a").toHex()).toStrictEqual("0000a");
+    expect(SRPInteger.fromHex("00000a").toHex()).toStrictEqual("00000a");
+    expect(SRPInteger.fromHex("000000a").toHex()).toStrictEqual("000000a");
+    expect(SRPInteger.fromHex("0000000a").toHex()).toStrictEqual("0000000a");
+    expect(SRPInteger.fromHex("00000000a").toHex()).toStrictEqual("00000000a");
   });
 });

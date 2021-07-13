@@ -36,6 +36,7 @@
     "format": "prettier '**/*.{js,md,ts,tsx}' --write",
     "test": "jest",
     "test:watch": "jest --watch",
+    "tscheck": "tsc --noEmit",
     "prepare": "yarn test && yarn build"
   },
   "prettier": {
@@ -51,8 +52,12 @@
     "pad-start": "^1.0.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/jest": "^26.0.24",
+    "babel-jest": "^27.0.6",
+    "jest": "^27.0.6",
     "microbundle": "^0.13.3",
-    "mocha": "^9.0.2",
     "prettier": "^2.3.2",
     "prettier-plugin-organize-imports": "^2.2.0",
     "typescript": "^4.3.5"
