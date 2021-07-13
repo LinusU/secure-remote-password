@@ -61,7 +61,7 @@ exports.deriveSession = function (
   serverPublicEphemeral,
   salt,
   username,
-  privateKey
+  privateKey,
 ) {
   // N    A large safe prime (N = 2q+1, where q is prime)
   // g    A generator modulo N
@@ -95,7 +95,7 @@ exports.deriveSession = function (
   // S = (B - kg^x) ^ (a + ux)
   const S = B.subtract(k.multiply(g.modPow(x, N))).modPow(
     a.add(u.multiply(x)),
-    N
+    N,
   );
 
   // K = H(S)
@@ -113,7 +113,7 @@ exports.deriveSession = function (
 exports.verifySession = function (
   clientPublicEphemeral,
   clientSession,
-  serverSessionProof
+  serverSessionProof,
 ) {
   // H()  One-way hash function
   const { H } = params;

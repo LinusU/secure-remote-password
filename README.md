@@ -90,7 +90,7 @@ const clientSession = srp.deriveSession(
   serverPublicEphemeral,
   salt,
   username,
-  privateKey
+  privateKey,
 );
 
 console.log(clientSession.key);
@@ -116,7 +116,7 @@ const serverSession = srp.deriveSession(
   salt,
   username,
   verifier,
-  clientSessionProof
+  clientSessionProof,
 );
 
 console.log(serverSession.key);

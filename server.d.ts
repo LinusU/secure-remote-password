@@ -15,5 +15,5 @@ export function deriveSession(
   salt: string,
   username: string,
   verifier: string,
-  clientSessionProof: string
+  clientSessionProof: string,
 ): Session;

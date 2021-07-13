@@ -28,7 +28,7 @@ exports.deriveSession = function (
   salt,
   username,
   verifier,
-  clientSessionProof
+  clientSessionProof,
 ) {
   // N    A large safe prime (N = 2q+1, where q is prime)
   // g    A generator modulo N

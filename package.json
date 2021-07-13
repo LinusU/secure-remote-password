@@ -10,6 +10,9 @@
   "browser": {
     "./lib/sha256.js": "./browser/sha256.js"
   },
+  "prettier": {
+    "trailingComma": "all"
+  },
   "dependencies": {
     "array-buffer-to-hex": "^1.0.0",
     "crypto-digest-sync": "^1.0.0",

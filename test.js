@@ -23,7 +23,7 @@ describe("Secure Remote Password", () => {
       serverEphemeral.public,
       salt,
       username,
-      privateKey
+      privateKey,
     );
     const serverSession = server.deriveSession(
       serverEphemeral.secret,
@@ -31,13 +31,13 @@ describe("Secure Remote Password", () => {
       salt,
       username,
       verifier,
-      clientSession.proof
+      clientSession.proof,
     );
 
     client.verifySession(
       clientEphemeral.public,
       clientSession,
-      serverSession.proof
+      serverSession.proof,
     );
 
     assert.strictEqual(clientSession.key, serverSession.key);
