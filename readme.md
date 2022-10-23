@@ -58,7 +58,7 @@ console.log(clientEphemeral.public)
 
 **2** - The server receives the client's public ephemeral value and username. Using the username we retrieve the `salt` and `verifier` from our user database. We then generate our own ephemeral value pair.
 
-*note:* if no user cannot be found in the database, a bogus salt and ephemeral value should be returned, to avoid leaking which users have signed up
+*note:* if no user can be found in the database, a bogus salt and ephemeral value should be returned, to avoid leaking which users have signed up
 
 ```js
 const srp = require('secure-remote-password/server')
