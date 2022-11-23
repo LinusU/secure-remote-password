@@ -34,11 +34,37 @@ console.log(verifier)
 // Send `username`, `salt` and `verifier` to the server
 ```
 
-*note:* `derivePrivateKey` is provided for completeness with the SRP 6a specification. It is however recommended to use some form of "slow hashing", like [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2), to reduce the viability of a brute force attack against the verifier.
+
+*note:* `derivePrivateKey` is provided for completeness with the SRP 6a specification. It is however recommended to use some form of "slow hashing", like [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2), to reduce the viability of a brute force attack against the verifier, e.g.:
+
+Using `@ctrlpanel/pbkdf2`:
+
+```js
+const pbkdf2 = require('@ctrlpanel/pbkdf2')
+const privateKey = Buffer.from(await pbkdf2(
+  Buffer.from([username, password].join(':'), 'utf8'),
+  Buffer.from(salt, 'hex'),
+  100000, // Iterations
+  32, // Key length
+  'SHA-256' // Hash
+  )).toString('hex'))
+```
+
+or using `asmcrypto.js` for wider browser support (Edge / iOS Safari):
+
+```js
+const { Pbkdf2HmacSha256 } = require('asmcrypto.js');
+const privateKey = Buffer.from(Pbkdf2HmacSha256(
+    Buffer.from([username, password].join(':'), 'utf8'),
+    Buffer.from(salt, 'hex'),
+    iterations,
+    keyLength,
+)).toString('hex');
+```
 
 ### Logging in
 
-Authenticating with the server involves mutliple steps.
+Authenticating with the server involves multiple steps.
 
 **1** - The client generates a secret/public ephemeral value pair.
 
