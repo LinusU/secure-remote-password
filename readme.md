@@ -36,6 +36,14 @@ console.log(verifier)
 
 *note:* `derivePrivateKey` is provided for completeness with the SRP 6a specification. It is however recommended to use some form of "slow hashing", like [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2), to reduce the viability of a brute force attack against the verifier.
 
+*note:* The use of a username as part of the verifier calculation means that if the user changes their 
+username they must simultaneously provide an update salt and verifier to the server.  If a user
+is able to login with multiple identifiers (e.g. username, phone number, or email address) you would
+need a separate verifier for each identifier.  To avoid these issues you can leave the `username` blank
+for purposes of this algorithm.  The downside of not using a username is that a server can do an attack
+to determine whether two users have the same password.  For normal apps that trust the server but use
+SRP just to avoid transmitting plaintext passwords, this may be an acceptable trade-off.
+
 ### Logging in
 
 Authenticating with the server involves mutliple steps.
